@@ -5,6 +5,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ["Andrew Nordman", "Matthew Wilson"]
   gem.email         = ["anordman@majorleaguegaming.com", "mwilson@majorleaguegaming.com"]
   gem.description   = %q{An instrumentation utility.}
+  gem.description   = %q{Helper library to strum along in your application.}
   gem.homepage      = "http://instrument.majorleaguegaming.com"
 
   gem.files         = `git ls-files`.split($\)
