@@ -4,18 +4,31 @@ module Strumbar
       def self.load
         Strumbar.subscribe 'query.redis' do |client, event|
           client.increment 'query.redis'
+          client.increment 'failure.redis' if event.payload[:failure]
+
+          command = event.payload[:command].size > 1 ? 'multi' : event.payload[:command].first
+          client.timing "#{command}.redis", event.duration
         end
 
-        unless ::Redis::Client.instance_methods.include? :process_with_instrumentation
+        unless ::Redis::Client.instance_methods.include? :call_with_instrumentation
           ::Redis::Client.class_eval do
-            def process_with_instrumentation commands
-              Strumbar.strum 'query.redis', commands: commands do
-                process_without_instrumentation commands
+            def call_with_instrumentation command, &block
+              Strumbar.strum 'query.redis', command: command do |payload|
+                call_without_instrumentation command, &block
+                begin
+                  reply = call_without_instrumentation command, &block 
+                  payload[:failure] = false
+                rescue CommandError
+                  payload[:failure] = true
+                  raise
+                end
+
+                reply
               end
             end
 
-            alias_method :process_without_instrumentation, :process
-            alias_method :process, :process_with_instrumentation
+            alias_method :call_without_instrumentation, :call
+            alias_method :call, :call_with_instrumentation
           end
         end
       end
