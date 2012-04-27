@@ -5,6 +5,10 @@ describe Strumbar do
     true
   end
 
+  after do
+    Strumbar.instance_variable_set(:@configuration, nil)
+  end
+
   describe '#client' do
     after do
       Strumbar.instance_variable_set(:@client, nil)
@@ -52,6 +56,36 @@ describe Strumbar do
       end
 
       Strumbar.configuration.should == @config_object
+    end
+  end
+
+  describe "#application" do
+    it "returns the configured value" do
+      Strumbar.configure { |c| c.application = "foobar" }
+      Strumbar.application.should == "foobar"
+    end
+    it "defaults to something comically bad so you'll change it" do
+      Strumbar.application.should == "my_awesome_app"
+    end
+  end
+
+  describe "#host" do
+    it "returns the configured value" do
+      Strumbar.configure { |c| c.host = "statsd.app" }
+      Strumbar.host.should == "statsd.app"
+    end
+    it "defaults to localhost" do
+      Strumbar.host.should == "localhost"
+    end
+  end
+
+  describe "#port" do
+    it "returns the configured port" do
+      Strumbar.configure { |c| c.port = 9999 }
+      Strumbar.port.should == 9999
+    end
+    it "defaults to 8125" do
+      Strumbar.port.should == 8125
     end
   end
 
