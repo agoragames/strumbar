@@ -45,9 +45,13 @@ module Strumbar
 
     def subscribe_to_controller
       subscribe /process_action.action_controller/ do |client, event|
-        client.timing     "total_time.#{event.name}", event.duration
-        client.timing     "view_time.#{event.name}",  event.payload[:view_runtime]
-        client.timing     "db_time.#{event.name}",    event.payload[:db_runtime]
+        key = "#{event.payload[:controller]}.#{event.payload[:action]}"
+
+        client.timing     "#{key}.total_time", event.duration
+        client.timing     "#{key}.view_time",  event.payload[:view_runtime]
+        client.timing     "#{key}.db_time",    event.payload[:db_runtime]
+
+        client.increment  "#{key}.status.#{event.payload[:status]}"
       end
     end
 
