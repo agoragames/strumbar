@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["anordman@majorleaguegaming.com", "mwilson@majorleaguegaming.com"]
   gem.description   = %q{An instrumentation utility.}
   gem.summary       = %q{Helper library to strum along in your application.}
-  gem.homepage      = "http://instrument.majorleaguegaming.com"
+  gem.homepage      = "http://github.com/agoragames/strumbar/"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
