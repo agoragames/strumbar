@@ -54,4 +54,19 @@ describe Strumbar do
       Strumbar.configuration.should == @config_object
     end
   end
+
+  describe '#subscribe' do
+    it 'should wrap ActiveSupport::Notifications' do
+      ActiveSupport::Notifications.should_receive(:subscribe).with('foo')
+      Strumbar.subscribe 'foo'
+    end
+
+    it 'should yield an event and client on instrument call' do
+      Strumbar.subscribe 'foo' do |client, event|
+        event.should be_a_kind_of ActiveSupport::Notifications::Event
+        client.should be_a_kind_of Strumbar::Client
+      end
+      ActiveSupport::Notifications.instrument 'foo'
+    end
+  end
 end
