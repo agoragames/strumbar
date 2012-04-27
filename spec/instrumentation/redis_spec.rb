@@ -1,24 +1,24 @@
 require 'spec_helper'
 
-class Redis
-  class Client
-    def call command, &block
-      
-    end
-
-    def validate
-      true
-    end
-  end
-end
-
 describe Strumbar::Instrumentation::Redis do
   before do
+    class Redis
+      class Client
+        def call command, &block
+          
+        end
+
+        def validate
+          true
+        end
+      end
+    end
     Strumbar::Instrumentation::Redis.load
   end
 
   after do
     ActiveSupport::Notifications.unsubscribe('query.redis')
+    Object.send :remove_const, :Redis
   end
 
   it 'adds a wrapper around Redis#call to instrument redis calls' do
