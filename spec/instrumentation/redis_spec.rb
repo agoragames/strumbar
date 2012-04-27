@@ -2,8 +2,8 @@ require 'spec_helper'
 
 class Redis
   class Client
-    def process commands
-      yield if block_given? 
+    def call command, &block
+      
     end
 
     def validate
@@ -21,9 +21,9 @@ describe Strumbar::Instrumentation::Redis do
     ActiveSupport::Notifications.unsubscribe('query.redis')
   end
 
-  it 'adds a wrapper around Redis#process to instrument redis calls' do
-    Strumbar.should_receive(:strum).with('query.redis', { commands: ['set'] })
-    Redis::Client.new.process ['set']
+  it 'adds a wrapper around Redis#call to instrument redis calls' do
+    Strumbar.should_receive(:strum).with('query.redis', { command: 'SET' })
+    Redis::Client.new.call 'SET'
   end
 
   it 'subscribes to query.redis notifications' do
@@ -31,8 +31,8 @@ describe Strumbar::Instrumentation::Redis do
     Strumbar.strum 'query.redis', {}
   end
 
-  it 'passes blocks in #process accordingly' do
+  it 'passes blocks in #call accordingly' do
     client = Redis::Client.new
-    client.process 'foo'
+    client.call 'foo'
   end
 end
