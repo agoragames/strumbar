@@ -69,4 +69,19 @@ describe Strumbar do
       ActiveSupport::Notifications.instrument 'foo'
     end
   end
+
+  describe "#strum" do
+    it "is syntactic sugar for ActiveSupport::Notifications.instrument" do
+      ActiveSupport::Notifications.should_receive(:instrument).with("event_name", { :payload => :yeah })
+      Strumbar.strum("event_name", { payload: :yeah })
+    end
+    it "handles the block correctly and all that jazz" do
+      foo = nil
+      ActiveSupport::Notifications.should_receive(:instrument).and_yield
+      Strumbar.strum("mah.event", {}) do
+        foo = 7
+      end
+      foo.should == 7
+    end
+  end
 end
