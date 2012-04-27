@@ -1,4 +1,4 @@
-# Strumbar
+# Strumbar [![Build Status](https://secure.travis-ci.org/agoragames/strumbar.png)](http://travis-ci.org/agoragames/strumbar)
 
 Strumbar is a wrapper around ActiveSupport::Notifications with preconfigurations
 for basic instrumentation to be sent to statsd.
@@ -67,3 +67,4 @@ loading default instrumentation subscriptions.  Currently, this list includes:
 - Redis
 
 More default instrumentation defaults will be added.
+
