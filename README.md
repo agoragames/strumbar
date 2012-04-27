@@ -24,9 +24,9 @@ Configuration:
 
 ``` ruby
 Strumbar.configure do |config|
-  config.port 80
-  config.host 'instrument.majorleaguegaming.com'
-  config.application 'instrument'
+  config.port = 80
+  config.host = 'instrument.majorleaguegaming.com'
+  config.application = 'instrument'
 end
 ```
 
