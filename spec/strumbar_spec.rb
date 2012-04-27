@@ -42,8 +42,8 @@ describe Strumbar do
       end
     end
 
-    it 'calls load_default_subscriptions' do
-      Strumbar.should_receive(:load_default_subscriptions)
+    it 'loads relevant Instrumentation' do
+      Strumbar::Instrumentation.should_receive(:load)
       Strumbar.configure { |c| }
     end
 

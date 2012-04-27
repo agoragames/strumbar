@@ -1,6 +1,7 @@
 require 'strumbar/version'
 require 'strumbar/configuration'
 require 'strumbar/client'
+require 'strumbar/instrumentation'
 
 require 'active_support'
 require 'active_support/core_ext/object/try'
@@ -12,7 +13,7 @@ module Strumbar
     def configure
       @configuration = Configuration.new
       yield @configuration
-      load_default_subscriptions
+      Instrumentation.load
     end
 
     def client
@@ -35,29 +36,6 @@ module Strumbar
       ActiveSupport::Notifications.subscribe identifier do |*args|
         event = ActiveSupport::Notifications::Event.new(*args)
         yield client, event
-      end
-    end
-
-    def load_default_subscriptions
-      subscribe_to_controller
-      subscribe_to_database
-    end
-
-    def subscribe_to_controller
-      subscribe /process_action.action_controller/ do |client, event|
-        key = "#{event.payload[:controller]}.#{event.payload[:action]}"
-
-        client.timing     "#{key}.total_time", event.duration
-        client.timing     "#{key}.view_time",  event.payload[:view_runtime]
-        client.timing     "#{key}.db_time",    event.payload[:db_runtime]
-
-        client.increment  "#{key}.status.#{event.payload[:status]}"
-      end
-    end
-
-    def subscribe_to_database
-      subscribe /sql.active_record/ do |client, event|
-        client.timing 'query_log', event.duration
       end
     end
 
