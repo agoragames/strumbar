@@ -3,18 +3,20 @@ module Strumbar
     module Redis
       def self.load
         Strumbar.subscribe 'query.redis' do |client, event|
-          client.increment 'redis.query'
+          client.increment 'query.redis'
         end
 
-        ::Redis::Client.class_eval do
-          def process_with_instrumentation commands
-            Strumbar.strum 'query.redis', commands: commands do
-              process_without_instrumentation commands
+        unless ::Redis::Client.instance_methods.include? :process_with_instrumentation
+          ::Redis::Client.class_eval do
+            def process_with_instrumentation commands
+              Strumbar.strum 'query.redis', commands: commands do
+                process_without_instrumentation commands
+              end
             end
-          end
 
-          alias_method :process_without_instrumentation, :process
-          alias_method :process, :process_with_instrumentation
+            alias_method :process_without_instrumentation, :process
+            alias_method :process, :process_with_instrumentation
+          end
         end
       end
     end
