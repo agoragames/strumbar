@@ -55,3 +55,15 @@ Strumbar.strum 'view.render', payload do
   render :text => "I'm monitored!"
 end
 ```
+
+
+## Default Instruments
+
+Strumbar takes the approach of auto-detecting the libraries being used and
+loading default instrumentation subscriptions.  Currently, this list includes:
+
+- ActionController
+- ActiveRecord
+- Redis
+
+More default instrumentation defaults will be added.
