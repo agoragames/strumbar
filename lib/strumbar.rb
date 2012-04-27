@@ -3,6 +3,7 @@ require 'strumbar/configuration'
 require 'strumbar/client'
 
 require 'active_support'
+require 'active_support/core_ext/object/try'
 
 module Strumbar
   class << self
@@ -15,9 +16,19 @@ module Strumbar
     end
 
     def client
-      host = configuration ? configuration.host : 'localhost'
-      port = configuration ? configuration.port : 8125
       @client ||= Client.new host, port
+    end
+
+    def host
+      configuration.try(:host) || 'localhost'
+    end
+
+    def port
+      configuration.try(:port) || 8125
+    end
+
+    def application
+      configuration.try(:application) || 'my_awesome_app'
     end
 
     def subscribe identifier
