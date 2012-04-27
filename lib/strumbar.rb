@@ -45,5 +45,9 @@ module Strumbar
         client.timing 'query_log', event.duration
       end
     end
+
+    def strum event, payload, &block
+      ActiveSupport::Notifications.instrument event, payload, &block
+    end
   end
 end

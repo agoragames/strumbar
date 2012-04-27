@@ -47,3 +47,11 @@ namespacing and syntactic sugar.
 
 By default, it will subscribe to runtime data for `process_action.action_controller`
 and the sql load time in `sql.active_record`.
+
+In case you get tired of typing `ActiveSupport::Notifications.instrument` you can use the helpful sugar `Strumbar` provides:
+
+```ruby
+Strumbar.strum 'view.render', payload do
+  render :text => "I'm monitored!"
+end
+```
