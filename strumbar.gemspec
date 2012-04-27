@@ -2,8 +2,8 @@
 require File.expand_path('../lib/strumbar/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["Andrew Nordman"]
-  gem.email         = ["cadwallion@gmail.com"]
+  gem.authors       = ["Andrew Nordman", "Matthew Wilson"]
+  gem.email         = ["anordman@majorleaguegaming.com", "mwilson@majorleaguegaming.com"]
   gem.description   = %q{An instrumentation utility.}
   gem.homepage      = "http://instrument.majorleaguegaming.com"
 
@@ -16,5 +16,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'activesupport'
   gem.add_dependency 'statsd'
+
   gem.add_development_dependency 'rspec'
+  gem.add_development_dependency 'rake'
 end
