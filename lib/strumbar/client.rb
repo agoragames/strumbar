@@ -1,6 +1,8 @@
+require 'statsd'
+
 module Strumbar
-  class Client < Statsd::Client
-    def initialize host = Strumbar.configuration.host, port = Strumbar.configuration.port
+  class Client < ::Statsd::Client
+    def initialize host, port
       @host = host
       @port = port
     end

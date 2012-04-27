@@ -23,10 +23,10 @@ Or install it yourself as:
 Configuration:
 
 ``` ruby
-Strumbar.configure do
-  port 80
-  host 'instrument.majorleaguegaming.com'
-  application 'instrument'
+Strumbar.configure do |config|
+  config.port 80
+  config.host 'instrument.majorleaguegaming.com'
+  config.application 'instrument'
 end
 ```
 

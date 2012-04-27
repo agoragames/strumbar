@@ -15,7 +15,9 @@ module Strumbar
     end
 
     def client
-      @client ||= Client.new
+      host = configuration ? configuration.host : 'localhost'
+      port = configuration ? configuration.port : 8125
+      @client ||= Client.new host, port
     end
 
     def subscribe identifier
