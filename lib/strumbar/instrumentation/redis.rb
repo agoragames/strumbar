@@ -6,7 +6,12 @@ module Strumbar
           client.increment 'query.redis'
           client.increment 'failure.redis' if event.payload[:failure]
 
-          command = event.payload[:command].join('_')
+          command = case event.payload[:command]
+            when NilClass then nil
+            when String then event.payload[:command]
+            else event.payload[:command].join('_')
+          end
+
           client.timing "#{command}.redis", event.duration
         end
 
