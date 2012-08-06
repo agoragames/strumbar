@@ -12,6 +12,8 @@ module Strumbar
             else event.payload[:command].join('_')
           end
 
+          command.gsub!(/:/, '_')
+
           client.timing "#{command}.redis", event.duration
         end
 
