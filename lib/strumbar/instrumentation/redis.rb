@@ -6,7 +6,8 @@ module Strumbar
           client.increment 'query.redis'
           client.increment 'failure.redis' if event.payload[:failure]
 
-          client.timing "#{event.payload[:command]}.redis", event.duration
+          command = event.payload[:command].join('_')
+          client.timing "#{command}.redis", event.duration
         end
 
         unless ::Redis::Client.instance_methods.include? :call_with_instrumentation
