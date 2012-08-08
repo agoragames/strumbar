@@ -44,13 +44,13 @@ Strumbar.configure do |config|
   config.action_controller_rate = 1
 
   # Toggles the built-in ActiveRecord instrumentation.
-  config.active_record = true
+  config.active_record = false
 
   # Sample rate for recording ActiveRecord events.
   config.active_record_rate = 1
 
   # Toggles the built-in Redis instrumentation.
-  config.redis = true
+  config.redis = false
 
   # Sample rate for recording Redis events.
   config.redis_rate = 1
