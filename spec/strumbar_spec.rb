@@ -59,13 +59,57 @@ describe Strumbar do
     end
   end
 
+  describe 'after #configure' do
+    context 'with default values' do
+      before { Strumbar.configure { } }
+      subject { Strumbar }
+
+      its(:default_rate) { should == 1 }
+
+      its(:action_controller) { should be_false }
+      its(:action_controller_rate) { should eql 1 }
+
+      its(:active_record) { should be_false }
+      its(:active_record_rate) { should eql 1 }
+
+      its(:redis) { should be_false }
+      its(:redis_rate) { should eql 1 }
+    end
+
+    context 'with user values' do
+      before do
+        Strumbar.configure do |c|
+          c.default_rate = 0.5
+          c.action_controller = true
+          c.action_controller_rate = 0.1
+          c.active_record = true
+          c.active_record_rate = 0.2
+          c.redis = true
+          c.redis_rate = 0.3
+        end
+      end
+      subject { Strumbar }
+
+      its(:default_rate) { should == 0.5 }
+
+      its(:action_controller) { should be_true }
+      its(:action_controller_rate) { should eql 0.1 }
+
+      its(:active_record) { should be_true }
+      its(:active_record_rate) { should eql 0.2 }
+
+      its(:redis) { should be_true }
+      its(:redis_rate) { should eql 0.3 }
+    end
+  end
+
   describe "#application" do
     it "returns the configured value" do
       Strumbar.configure { |c| c.application = "foobar" }
       Strumbar.application.should == "foobar"
     end
     it "defaults to something comically bad so you'll change it" do
-      Strumbar.application.should == "my_awesome_app"
+      Strumbar.application.should == "statsd_appname"
     end
   end
 

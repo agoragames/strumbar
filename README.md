@@ -20,13 +20,40 @@ Or install it yourself as:
 ## Usage
 
 
-Configuration:
+Configuration (all options shown with default values):
 
 ``` ruby
 Strumbar.configure do |config|
-  config.port = 80
-  config.host = 'instrument.majorleaguegaming.com'
-  config.application = 'instrument'
+
+  # Application name as it should be stored by your Statsd backend.
+  config.application = 'statsd_appname'
+
+  # Statsd hostname
+  config.host = 'statsd.appname.example'
+
+  # Statsd port
+  config.port = 8125
+
+  # Default sample rate for all events.
+  config.default_rate = 1
+
+  # Toggles the built-in ActionController instrumentation.
+  config.action_controller = false
+
+  # Sample rate for recording ActionController events.
+  config.action_controller_rate = 1
+
+  # Toggles the built-in ActiveRecord instrumentation.
+  config.active_record = true
+
+  # Sample rate for recording ActiveRecord events.
+  config.active_record_rate = 1
+
+  # Toggles the built-in Redis instrumentation.
+  config.redis = true
+
+  # Sample rate for recording Redis events.
+  config.redis_rate = 1
 end
 ```
 
@@ -60,13 +87,11 @@ end
 ## Default Instruments
 
 Strumbar takes the approach of auto-detecting the libraries being used and
-loading default instrumentation subscriptions.  Currently, this list includes:
+loading default instrumentation subscriptions that you have explicitely enabled
+in your Strumbar configuration block.
 
-- ActionController
-- ActiveRecord
-- Redis
-
-More default instrumentation defaults will be added.
+** This behavior has changed from previous versions inwhich all detected libraries were
+automatically used by default.**
 
 ## Authors
 
