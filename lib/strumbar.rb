@@ -29,7 +29,11 @@ module Strumbar
     end
 
     def application
-      configuration.try(:application) || 'my_awesome_app'
+      configuration.try(:application) || 'statsd_appname'
+    end
+
+    def default_rate
+      configuration.try(:default_rate) || 1
     end
 
     def subscribe identifier

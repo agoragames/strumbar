@@ -7,15 +7,15 @@ module Strumbar
       @port = port
     end
 
-    def timing stat, time, sample_rate = 1
+    def timing stat, time, sample_rate = Strumbar.default_rate
       super "#{Strumbar.application}.#{stat}", time, sample_rate
     end
 
-    def increment stat, sample_rate = 1
+    def increment stat, sample_rate = Strumbar.default_rate
       super "#{Strumbar.application}.#{stat}", sample_rate
     end
 
-    def decrement stat, sample_rate = 1
+    def decrement stat, sample_rate = Strumbar.default_rate
       super "##{Strumbar.application}.#{stat}", sample_rate
     end
   end

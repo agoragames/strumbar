@@ -27,12 +27,28 @@ describe Strumbar::Instrumentation::Redis do
   end
 
   it 'subscribes to query.redis notifications' do
-    Strumbar.client.should_receive(:increment).with('query.redis')
+    Strumbar.client.should_receive(:increment).with('query.redis', 1)
     Strumbar.strum 'query.redis', {}
   end
 
   it 'passes blocks in #call accordingly' do
     client = Redis::Client.new
     client.call 'foo'
+  end
+
+  context 'with a user-defined redis sample rate' do
+    before do
+      Strumbar.configure do |config|
+        c.instrumentation do
+          Strumbar::Instrumentation::Redis.load rate: 0.5
+        end
+      end
+
+      it 'subscribes to query.redis notifications' do
+        Strumbar.client.should_receive(:increment).with('query.redis', 0.5)
+        Strumbar.strum 'query.redis', {}
+      end
+
+    end
   end
 end

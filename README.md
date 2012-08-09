@@ -20,13 +20,23 @@ Or install it yourself as:
 ## Usage
 
 
-Configuration:
+Configuration (all options shown with default values):
 
 ``` ruby
 Strumbar.configure do |config|
-  config.port = 80
-  config.host = 'instrument.majorleaguegaming.com'
-  config.application = 'instrument'
+
+  # Application name as it should be stored by your Statsd backend.
+  config.application = 'statsd_appname'
+
+  # Statsd hostname
+  config.host = 'statsd.appname.example'
+
+  # Statsd port
+  config.port = 8125
+
+  # Default sample rate for all events.
+  config.default_rate = 1
+
 end
 ```
 
@@ -66,7 +76,19 @@ loading default instrumentation subscriptions.  Currently, this list includes:
 - ActiveRecord
 - Redis
 
-More default instrumentation defaults will be added.
+Alternatively, you can choose specific instrumentations to load
+and set your own sample rates for each by passing a block to config.instrumentation, like so:
+
+``` ruby
+Strumbar.configure do |config|
+  config.instrumentation do
+    Strumbar::Instrumentation::ActionController.load rate: 0.5
+    Strumbar::Instrumentation::ActiveRecord.load
+    Strumbar::Instrumentation::Redis.load
+
+    AppName::Instrumentation::ThirdPartyInstrument.load rate: 0.8
+  end
+end
 
 ## Authors
 

@@ -59,19 +59,39 @@ describe Strumbar do
     end
   end
 
+  describe 'after #configure' do
+    context 'with default values' do
+      before { Strumbar.configure { } }
+      subject { Strumbar }
+
+      its(:default_rate) { should == 1 }
+    end
+
+    context 'with user values' do
+      before do
+        Strumbar.configure do |config|
+          config.default_rate = 0.5
+        end
+      end
+      subject { Strumbar }
+
+      its(:default_rate) { should == 0.5 }
+    end
+  end
+
   describe "#application" do
     it "returns the configured value" do
-      Strumbar.configure { |c| c.application = "foobar" }
+      Strumbar.configure { |config| config.application = "foobar" }
       Strumbar.application.should == "foobar"
     end
     it "defaults to something comically bad so you'll change it" do
-      Strumbar.application.should == "my_awesome_app"
+      Strumbar.application.should == "statsd_appname"
     end
   end
 
   describe "#host" do
     it "returns the configured value" do
-      Strumbar.configure { |c| c.host = "statsd.app" }
+      Strumbar.configure { |config| config.host = "statsd.app" }
       Strumbar.host.should == "statsd.app"
     end
     it "defaults to localhost" do
@@ -81,7 +101,7 @@ describe Strumbar do
 
   describe "#port" do
     it "returns the configured port" do
-      Strumbar.configure { |c| c.port = 9999 }
+      Strumbar.configure { |config| config.port = 9999 }
       Strumbar.port.should == 9999
     end
     it "defaults to 8125" do

@@ -1,10 +1,12 @@
 module Strumbar
   module Instrumentation
     module Redis
-      def self.load
+      def self.load(options={})
+        options[:rate] ||= Strumbar.default_rate
+
         Strumbar.subscribe 'query.redis' do |client, event|
-          client.increment 'query.redis'
-          client.increment 'failure.redis' if event.payload[:failure]
+          client.increment 'query.redis', options[:rate]
+          client.increment('failure.redis', options[:rate]) if event.payload[:failure]
 
           command = case event.payload[:command]
             when NilClass then nil
@@ -14,7 +16,7 @@ module Strumbar
 
           command.gsub!(/:/, '_') unless command.nil?
 
-          client.timing "#{command}.redis", event.duration
+          client.timing "#{command}.redis", event.duration, options[:rate]
         end
 
         unless ::Redis::Client.instance_methods.include? :call_with_instrumentation
