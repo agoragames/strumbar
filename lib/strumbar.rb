@@ -36,30 +36,6 @@ module Strumbar
       configuration.try(:default_rate) || 1
     end
 
-    def action_controller
-      configuration.try(:action_controller) || false
-    end
-
-    def action_controller_rate
-      configuration.try(:action_controller_rate) || 1
-    end
-
-    def active_record
-      configuration.try(:active_record) || false
-    end
-
-    def active_record_rate
-      configuration.try(:active_record_rate) || 1
-    end
-
-    def redis
-      configuration.try(:redis) || false
-    end
-
-    def redis_rate
-      configuration.try(:redis_rate) || 1
-    end
-
     def subscribe identifier
       ActiveSupport::Notifications.subscribe identifier do |*args|
         event = ActiveSupport::Notifications::Event.new(*args)

@@ -5,16 +5,14 @@ module Strumbar
     autoload :ActiveRecord, 'strumbar/instrumentation/active_record'
 
     def self.load
-      if Strumbar.action_controller && defined?(::ActionController)
-        Strumbar::Instrumentation::ActionController.load
-      end
+      custom_load = Strumbar.configuration.custom_load
 
-      if Strumbar.active_record && defined?(::ActiveRecord)
-        Strumbar::Instrumentation::ActiveRecord.load
-      end
-
-      if Strumbar.redis && defined?(::Redis)
-        Strumbar::Instrumentation::Redis.load
+      if custom_load
+        custom_load.call
+      else
+        Strumbar::Instrumentation::ActionController.load if defined?(::ActionController)
+        Strumbar::Instrumentation::ActiveRecord.load if defined?(::ActiveRecord)
+        Strumbar::Instrumentation::Redis.load if defined?(::Redis)
       end
     end
   end

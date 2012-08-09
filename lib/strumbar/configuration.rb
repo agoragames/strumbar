@@ -4,11 +4,10 @@ module Strumbar
                   :host,
                   :application,
                   :default_rate,
-                  :action_controller,
-                  :action_controller_rate,
-                  :active_record,
-                  :active_record_rate,
-                  :redis,
-                  :redis_rate
+                  :custom_load
+
+    def instrumentation(&block)
+      @custom_load = block
+    end
   end
 end

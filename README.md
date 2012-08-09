@@ -37,23 +37,6 @@ Strumbar.configure do |config|
   # Default sample rate for all events.
   config.default_rate = 1
 
-  # Toggles the built-in ActionController instrumentation.
-  config.action_controller = false
-
-  # Sample rate for recording ActionController events.
-  config.action_controller_rate = 1
-
-  # Toggles the built-in ActiveRecord instrumentation.
-  config.active_record = false
-
-  # Sample rate for recording ActiveRecord events.
-  config.active_record_rate = 1
-
-  # Toggles the built-in Redis instrumentation.
-  config.redis = false
-
-  # Sample rate for recording Redis events.
-  config.redis_rate = 1
 end
 ```
 
@@ -87,11 +70,25 @@ end
 ## Default Instruments
 
 Strumbar takes the approach of auto-detecting the libraries being used and
-loading default instrumentation subscriptions that you have explicitely enabled
-in your Strumbar configuration block.
+loading default instrumentation subscriptions.  Currently, this list includes:
 
-** This behavior has changed from previous versions inwhich all detected libraries were
-automatically used by default.**
+- ActionController
+- ActiveRecord
+- Redis
+
+Alternatively, you can choose specific instrumentations to load
+and set your own sample rates for each by passing a block to config.instrumentation, like so:
+
+``` ruby
+Strumbar.configure do |config|
+  config.instrumentation do
+    Strumbar::Instrumentation::ActionController.load rate: 0.5
+    Strumbar::Instrumentation::ActiveRecord.load
+    Strumbar::Instrumentation::Redis.load
+
+    AppName::Instrumentation::ThirdPartyInstrument.load rate: 0.8
+  end
+end
 
 ## Authors
 

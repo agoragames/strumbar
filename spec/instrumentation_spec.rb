@@ -6,12 +6,9 @@ describe Strumbar::Instrumentation do
       Object.send :remove_const, klass
     end
 
-    context 'with all instrumentations enabled' do
+    context 'without a custom instrumentation loader' do
       before do
-        Strumbar.configure do |c|
-          c.action_controller = true
-          c.active_record = true
-          c.redis = true
+        Strumbar.configure do |config|
         end
       end
 
@@ -64,22 +61,19 @@ describe Strumbar::Instrumentation do
 
     end
 
-    context 'with all instrumentations disabled' do
+    context 'with a custom instrumentations loader' do
       before do
-        Strumbar.configure do |c|
-          c.action_controller = false
-          c.active_record = false
-          c.redis = false
+        Strumbar.configure do |config|
+          config.instrumentation do
+            Strumbar::Instrumentation::ActionController.load
+          end
         end
       end
 
-      it 'does not load the ActionController subscription even if ActionController is defined' do
-
+      it 'does load the ActionController subscription' do
         ActionController = true
-
-        Strumbar::Instrumentation::ActionController.should_not_receive :load
+        Strumbar::Instrumentation::ActionController.should_receive :load
         Strumbar::Instrumentation.load
-
         undefine :ActionController
       end
 

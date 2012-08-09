@@ -38,8 +38,10 @@ describe Strumbar::Instrumentation::Redis do
 
   context 'with a user-defined redis sample rate' do
     before do
-      Strumbar.configure do |c|
-        c.redis_rate = 0.5
+      Strumbar.configure do |config|
+        c.instrumentation do
+          Strumbar::Instrumentation::Redis.load rate: 0.5
+        end
       end
 
       it 'subscribes to query.redis notifications' do
