@@ -90,6 +90,8 @@ Strumbar.configure do |config|
   end
 end
 
+```
+
 ## Authors
 
 Written by [Andrew Nordman](https://github.com/cadwallion) and [Matthew Wilson](https://github.com/hypomodern)
