@@ -2,7 +2,7 @@ module Strumbar
   module Instrumentation
     module ActionController
       def self.load(options={})
-        options[:rate]    ||= Strumbar.default_rate
+        options[:rate] ||= Strumbar.default_rate
         using_mongoid = options.fetch(:mongoid, false)
 
         Strumbar.subscribe /process_action.action_controller/ do |client, event|
