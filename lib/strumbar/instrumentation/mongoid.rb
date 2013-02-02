@@ -20,7 +20,7 @@ module Strumbar
           end
         end
 
-        unless ::Moped::Connection.instance_methods.include? :call_with_instrumentation
+        unless ::Moped::Connection.instance_methods.include? :read_with_instrumentation
           ::Moped::Connection.module_eval do
             CALLS_TO_BE_INSTRUMENTED.each do |method|
               class_eval <<-CODE, __FILE__, __LINE__ + 1
