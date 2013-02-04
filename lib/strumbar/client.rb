@@ -18,5 +18,9 @@ module Strumbar
     def decrement stat, sample_rate = Strumbar.default_rate
       super "##{Strumbar.application}.#{stat}", sample_rate
     end
+
+    def gauge stat, value
+      super "##{Strumbar.application}.#{stat}", value
+    end
   end
 end
