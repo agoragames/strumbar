@@ -14,7 +14,7 @@ module Strumbar
           Strumbar::Instrumentation::Mongoid::RuntimeTracker
         end
 
-        def process_action(action, *args)
+        def process_action action, *args
           time_tracker.reset
           super
         end
@@ -28,13 +28,13 @@ module Strumbar
           runtime - mongo_rt_after_render
         end
 
-        def append_info_to_payload(payload)
+        def append_info_to_payload payload
           super
           payload[:mongo_runtime] = mongo_runtime
         end
 
         module ClassMethods
-          def log_process_action(payload)
+          def log_process_action payload
             messages, mongo_runtime = super, payload[:mongo_runtime]
             messages << ("Mongo: %.1fms" % mongo_runtime.to_f) if mongo_runtime
             messages
