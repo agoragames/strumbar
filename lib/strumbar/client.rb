@@ -12,15 +12,23 @@ module Strumbar
     end
 
     def increment stat, sample_rate = Strumbar.default_rate
-      super "#{Strumbar.application}.#{stat}", sample_rate
+      count "#{Strumbar.application}.#{stat}", 1, sample_rate
     end
 
     def decrement stat, sample_rate = Strumbar.default_rate
-      super "##{Strumbar.application}.#{stat}", sample_rate
+      count "#{Strumbar.application}.#{stat}", -1, sample_rate
     end
 
-    def gauge stat, value
-      super "##{Strumbar.application}.#{stat}", value
+    def count stat, value, sample_rate = Strumbar.default_rate
+      super "#{Strumbar.application}.#{stat}", value, sample_rate
+    end
+
+    def gauge stat, value, sample_rate = Strumbar.default_rate
+      super "#{Strumbar.application}.#{stat}", value, sample_rate
+    end
+
+    def set stat, value, sample_rate = Strumbar.default_rate
+      super "#{Strumbar.application}.#{stat}", value, sample_rate
     end
   end
 end
