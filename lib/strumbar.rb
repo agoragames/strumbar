@@ -28,6 +28,10 @@ module Strumbar
       configuration.try(:port) || 8125
     end
 
+    def instruments
+      configuration.instruments
+    end
+
     def application
       configuration.try(:application) || 'statsd_appname'
     end

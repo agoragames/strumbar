@@ -1,105 +1,65 @@
 require 'spec_helper'
 
+class Guitar
+  def self.load
+    
+  end
+end
+
+class BassGuitar < Guitar ; end
+class Pencil ; end
+
 describe Strumbar::Instrumentation do
   describe '#load' do
-    def undefine klass
-      Object.send :remove_const, klass
-    end
-
-    context 'without a custom instrumentation loader' do
-      before do
+    context 'configuration block' do
+      it 'accepts an instrument that responds to #load' do
         Strumbar.configure do |config|
-        end
-      end
-
-      it 'loads the ActionController subscription if ActionController is defined' do
-
-        ActionController = true
-
-        Strumbar::Instrumentation::ActionController.should_receive :load
-        Strumbar::Instrumentation.load
-
-        undefine :ActionController
-      end
-
-      it 'does not load ActionController subscription if not defined' do
-        Strumbar::Instrumentation::ActionController.should_not_receive :load
-        Strumbar::Instrumentation.load
-      end
-
-      it 'loads the ActiveRecord subscription if ActiveRecord is loaded' do
-        ActiveRecord = true
-
-        Strumbar::Instrumentation::ActiveRecord.should_receive :load
-        Strumbar::Instrumentation.load
-
-        undefine :ActiveRecord
-      end
-
-      it 'does not load ActiveRecord subscription if not defined' do
-        Strumbar::Instrumentation::ActiveRecord.should_not_receive :load
-        Strumbar::Instrumentation.load
-      end
-
-      it 'loads the Redis subscription if Redis is defined' do
-        class Redis
-          class Client
-            def process ; end
-          end
+          config.instruments.use Guitar
         end
 
-        Strumbar::Instrumentation::Redis.should_receive :load
-        Strumbar::Instrumentation.load
-
-        undefine :Redis
+        Strumbar.instruments.should include Guitar
       end
 
-      it 'does not load Redis subscription if not defined' do
-        Strumbar::Instrumentation::Redis.should_not_receive :load
-        Strumbar::Instrumentation.load
-      end
-
-    end
-
-    context 'with a custom instrumentations loader' do
-      before do
+      it 'accepts an array of instruments' do
         Strumbar.configure do |config|
-          config.instrumentation do
-            Strumbar::Instrumentation::ActionController.load
-          end
+          config.instruments.use [Guitar, BassGuitar]
+        end
+
+        Strumbar.instruments.should include Guitar
+        Strumbar.instruments.should include BassGuitar
+      end
+
+      it 'allows deletion of instruments from Strumbar' do
+        Strumbar.configure do |config|
+          config.instruments.use Guitar
+          config.instruments.should include Guitar
+          config.instruments.delete Guitar
+          config.instruments.should_not include Guitar
         end
       end
 
-      it 'does load the ActionController subscription' do
-        ActionController = true
-        Strumbar::Instrumentation::ActionController.should_receive :load
-        Strumbar::Instrumentation.load
-        undefine :ActionController
-      end
-
-      it 'does not load the ActiveRecord subscription even if ActiveRecord is loaded' do
-        ActiveRecord = true
-
-        Strumbar::Instrumentation::ActiveRecord.should_not_receive :load
-        Strumbar::Instrumentation.load
-
-        undefine :ActiveRecord
-      end
-
-      it 'does not load the Redis subscription even if Redis is defined' do
-        class Redis
-          class Client
-            def process ; end
-          end
+      it 'raises an exception when trying to load an Instrument that does not respond to load' do
+        Strumbar.configure do |config|
+          expect { config.instruments.use Pencil }.to raise_error
         end
+      end
 
+      it 'loads no default instruments unless specified' do
+        Strumbar.configure do
+          # NOPE
+        end
+        Strumbar.instruments.should be_empty
         Strumbar::Instrumentation::Redis.should_not_receive :load
-        Strumbar::Instrumentation.load
-
-        undefine :Redis
       end
 
-    end
+      it 'sends the load message to all instruments in Strumbar' do
+        Guitar.should_receive :load
+        BassGuitar.should_receive :load
 
+        Strumbar.configure do |config|
+          config.instruments.use [Guitar, BassGuitar]
+        end
+      end
+    end
   end
 end
