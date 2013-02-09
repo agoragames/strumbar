@@ -49,5 +49,21 @@ module Strumbar
     def initialize
       @instruments = InstrumentList.new
     end
+
+    def host
+      @host || 'localhost'
+    end
+
+    def port
+      @port || 8125
+    end
+
+    def application
+      @application || 'statsd_appname'
+    end
+
+    def default_rate
+      @default_rate || 1
+    end
   end
 end

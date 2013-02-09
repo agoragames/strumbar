@@ -5,11 +5,10 @@ require 'strumbar/instrumentation'
 
 require 'active_support'
 require 'active_support/core_ext/object/try'
+require 'active_support/core_ext/module/delegation'
 
 module Strumbar
   class << self
-    attr_reader :configuration
-
     def configure
       @configuration = Configuration.new
       yield @configuration
@@ -20,25 +19,11 @@ module Strumbar
       @client ||= Client.new host, port
     end
 
-    def host
-      configuration.try(:host) || 'localhost'
+    def configuration
+      @configuration ||= Configuration.new
     end
 
-    def port
-      configuration.try(:port) || 8125
-    end
-
-    def instruments
-      configuration.instruments
-    end
-
-    def application
-      configuration.try(:application) || 'statsd_appname'
-    end
-
-    def default_rate
-      configuration.try(:default_rate) || 1
-    end
+    delegate :host, :port, :instruments, :application, :default_rate, to: :configuration
 
     def subscribe identifier
       ActiveSupport::Notifications.subscribe identifier do |*args|
