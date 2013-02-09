@@ -66,30 +66,38 @@ Strumbar.strum 'view.render', payload do
 end
 ```
 
+## Instruments
 
-## Default Instruments
-
-Strumbar takes the approach of auto-detecting the libraries being used and
-loading default instrumentation subscriptions.  Currently, this list includes:
-
-- ActionController
-- ActiveRecord
-- Redis
-
-Alternatively, you can choose specific instrumentations to load
-and set your own sample rates for each by passing a block to config.instrumentation, like so:
+Strumbar allows middleware-style instruments to be added via the configure block.  These instruments
+need only respond to `#load` with an optional hash. Strumbar comes with a few instruments to be added.
+Here's an example:
 
 ``` ruby
-Strumbar.configure do |config|
-  config.instrumentation do
-    Strumbar::Instrumentation::ActionController.load rate: 0.5
-    Strumbar::Instrumentation::ActiveRecord.load
-    Strumbar::Instrumentation::Redis.load
-
-    AppName::Instrumentation::ThirdPartyInstrument.load rate: 0.8
+class Guitar
+  def self.load options = {}
+    Strumbar.subscribe 'query.*' do |client, event|
+      client.increment "query.#{event.payload[:query]}", options[:rate]
+    end
   end
 end
 
+Strumbar.configure do |config|
+    # Can pass optional hash of data to controller for access when loading
+    config.instruments.use Strumbar::Instrumentation::ActiveRecord, rate: 0.8
+    config.instruments.use Strumbar::Instrumentation::ActionController, rate: 1.0
+
+    # Unless passed, `rate` will be passed as the value of Strumbar.default_rate
+    config.instruments.use Strumbar::Instrumentation::Redis
+
+    # When passing an array of objects, each element of the array will use the
+    # same optional information, and will use the default rate if not supplied
+
+    # Guitar and SnareDrum will receive `{ rate: Strumbar.default_rate }`
+    config.instruments.use [Guitar, SnareDrum]
+
+    # SixStringBass and FourStringBass will receive the same hash
+    config.instruments.use [SixStringBass, FourStringBass], rate: 0.75
+end
 ```
 
 ## Authors
