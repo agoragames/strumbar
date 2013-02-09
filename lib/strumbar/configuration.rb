@@ -14,25 +14,25 @@ module Strumbar
       @instruments.empty?
     end
 
-    def use instruments
+    def use instruments, options = {}
       if instruments.respond_to? :each
         instruments.each do |instrument|
-          add instrument
+          add instrument, options
         end
       else
-        add instruments
+        add instruments, options
       end
     end
 
     def delete instrument
-      @instruments.delete instrument
+      @instruments.delete_if { |i| i[0] == instrument }
     end
 
     private
 
-    def add instrument
+    def add instrument, options
       if instrument.respond_to? :load
-        @instruments << instrument
+        @instruments << [instrument, options]
       else
         raise 'Instrument does not respond to load'
       end

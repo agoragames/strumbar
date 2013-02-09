@@ -6,8 +6,13 @@ module Strumbar
     autoload :Redis, 'strumbar/instrumentation/redis'
 
     def self.load
-      Strumbar.instruments.each do |instrument|
-        instrument.load
+      Strumbar.instruments.each do |instrument_info|
+        instrument  = instrument_info[0]
+        options     = instrument_info[1]
+
+        options[:rate] ||= Strumbar.default_rate
+
+        instrument.load options
       end
     end
   end
