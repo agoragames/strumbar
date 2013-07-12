@@ -7,6 +7,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{An instrumentation utility.}
   gem.summary       = %q{Helper library to strum along in your application.}
   gem.homepage      = "https://github.com/agoragames/strumbar"
+  gem.license       = 'MIT'
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
